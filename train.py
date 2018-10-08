@@ -18,7 +18,6 @@ from tensorflow.python.keras.optimizers import SGD
 
 
 
-# 2.Convolutional Layer, applies 200 3X300 filters(extracting 300-dimension vectors for 3 words) output 200 vectors of 1X(size of words - 2).
 def get_model(dense_layer_size,
                  filters,
                  kernel_size,
@@ -28,6 +27,19 @@ def get_model(dense_layer_size,
                  num_classes,
                  num_features,
                  embedding_matrix=None):
+    """
+    Create the CNN architecture used by Polisis
+    :param dense_layer_size: dense layer size
+    :param filters: size of the filters
+    :param kernel_size: size of the kernel
+    :param embedding_dim: number of dimensions for the embedding layers
+    :param pool_size: pooling size
+    :param input_shape: input shape
+    :param num_classes: number of labels for output
+    :param num_features: number of features for input of embedding layers, default to 500
+    :param embedding_matrix: load the embedding
+    :return: CNN model
+    """
     model = models.Sequential()
     model.add(Embedding(input_dim=num_features,
                             output_dim=embedding_dim,
@@ -72,18 +84,26 @@ def train_sequence_model(train_texts,
                          pool_size,
                          top_k,
                          load_saved_weights = None):
-    """Trains sequence model on the given dataset.
-    # Arguments
-        data: tuples of training and test texts and labels.
-        learning_rate: float, learning rate for training model.
-        epochs: int, number of epochs.
-        batch_size: int, number of samples per batch.
-        blocks: int, number of pairs of sepCNN and pooling blocks in the model.
-        filters: int, output dimension of sepCNN layers in the model.
-        dropout_rate: float: percentage of input to drop at Dropout layers.
-        embedding_dim: int, dimension of the embedding vectors.
-        kernel_size: int, length of the convolution window.
-        pool_size: int, factor by which to downscale input at MaxPooling layer.
+    """
+    #TODO implement the history module
+    :param train_texts: train_texts
+    :param test_texts: test_texts
+    :param train_labels: train_labels
+    :param test_labels: test_labels
+    :param word_index: word_index
+    :param dense_layer_size: size of the output layer
+    :param embedding_matrix: load a word embedding or not
+    :param num_classes: number of classes
+    :param learning_rate: learning rate
+    :param epochs: max number of epochs
+    :param batch_size: batch size
+    :param filters: number of filters
+    :param embedding_dim: embedding dimensions
+    :param kernel_size: size of kernel
+    :param pool_size: size of pooling layer
+    :param top_k: top_k words
+    :param load_saved_weights: training a new model or load a trained model
+    :return: trained model
     """
 
     num_features = min(len(word_index) + 1, top_k)
@@ -113,10 +133,7 @@ def train_sequence_model(train_texts,
                 validation_data=(test_texts, test_labels),
                 verbose=2,  # Logs once per epoch.
         batch_size = batch_size)
-        model.save('saved.h5')
-
-
-
+        model.save('saved2.h5')
 
     return model
     # return history['val_acc'][-1], history['val_loss'][-1]
